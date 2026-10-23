@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Snap Vanish</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <img src="icons/icon48.png" alt="" width="28" height="28">
+    <h1>Snap Vanish</h1>
+    <label class="switch" title="Turn the effect on or off">
+      <input type="checkbox" id="enabled">
+      <span></span>
+    </label>
+  </header>
+
+  <section class="status" id="status">
+    <span class="dot" id="statusDot"></span>
+    <span id="statusText">Checking this tab…</span>
+  </section>
+
+  <button id="snap" class="primary">Snap now</button>
+  <p class="hint">Or press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> in the meeting tab.</p>
+  <section class="room">
+    <div class="roomrow">
+      <div class="thumb" id="roomThumb"><span id="roomEmpty">No empty-room photo yet</span></div>
+      <div class="roombtns">
+        <button id="captureRoom" class="secondary">Capture empty room</button>
+        <button id="uploadRoom" class="secondary">Upload photo</button>
+      </div>
+    </div>
+    <input type="file" id="roomFile" accept="image/*" hidden>
+    <p class="hint" id="roomHint">Step out of view, then use Capture (5 s countdown), or upload a photo taken from this exact camera spot.</p>
+  </section>
+
+  <section class="group">
+    <label class="row"><span>Detect finger snaps</span><input type="checkbox" id="gesture"></label>
+    <label class="row"><span>Use mic to confirm snap click</span><input type="checkbox" id="audioAssist"></label>
+    <label class="row"><span>Mute my mic while vanished</span><input type="checkbox" id="muteOnVanish"></label>
+    <label class="row col">
+      <span>Snap sensitivity <output id="sensitivityOut"></output></span>
+      <input type="range" id="sensitivity" min="1" max="5" step="1">
+    </label>
+    <label class="row col">
+      <span>Dust duration <output id="durationOut"></output></span>
+      <input type="range" id="duration" min="1" max="5" step="0.2">
+    </label>
+    <label class="row"><span>Dust blows</span>
+      <select id="wind">
+        <option value="right">Right</option>
+        <option value="left">Left</option>
+        <option value="up">Up</option>
+      </select>
+    </label>
+    <label class="row"><span>Debug overlay</span><input type="checkbox" id="debug"></label>
+  </section>
+
+  <p class="tip">When you vanish, the dust blows away and your saved empty-room photo is shown. Keep the camera in the same spot and lighting as when the photo was taken.</p>
+  <p class="tip">Just installed the extension while a meeting tab was open? Reload that tab once.</p>
+
+  <script src="src/defaults.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

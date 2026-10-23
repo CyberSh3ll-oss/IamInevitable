@@ -1,0 +1,59 @@
+{
+  "manifest_version": 3,
+  "name": "Snap Vanish",
+  "short_name": "Snap Vanish",
+  "version": "1.2.0",
+  "minimum_chrome_version": "111",
+  "description": "Snap your fingers on camera and turn to dust, Endgame style, revealing a real photo of your empty room. Works with Google Meet, Teams, Zoom web and any site that uses your webcam.",
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Snap Vanish",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "permissions": ["storage"],
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/inject.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": ["<all_urls>"],
+      "js": ["src/defaults.js", "src/bridge.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["engine.html"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "snap": {
+      "suggested_key": {
+        "default": "Alt+Shift+S",
+        "mac": "Alt+Shift+S"
+      },
+      "description": "Vanish / reappear (manual snap)"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
+}

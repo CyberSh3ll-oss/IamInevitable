@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snap Vanish Test</title>
+  <style>
+    :root { --bg: #111; --fg: #eee; --muted: #999; --accent: #9a6bff; }
+    body { margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.4 system-ui, sans-serif; }
+    main { max-width: 960px; margin: 0 auto; }
+    video { width: 100%; background: #000; border-radius: 10px; display: block; }
+    button { background: var(--accent); color: #fff; border: 0; border-radius: 8px; padding: 10px 16px; font: inherit; font-weight: 600; cursor: pointer; }
+    .bar { display: flex; gap: 10px; align-items: center; margin: 12px 0; flex-wrap: wrap; }
+    #log { color: var(--muted); font: 12px ui-monospace, monospace; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Snap Vanish camera test</h1>
+  <p>This page shows exactly what a meeting app would receive from your camera. Click Start, then snap your fingers (thumb + middle finger, hand clearly visible), or press Alt+Shift+S.</p>
+  <div class="bar">
+    <button id="start">Start camera</button>
+    <button id="stop">Stop</button>
+    <span id="state"></span>
+  </div>
+  <video id="v" autoplay playsinline muted></video>
+  <p id="log"></p>
+</main>
+<script>
+  const v = document.getElementById('v');
+  const log = (m) => (document.getElementById('log').textContent += m + '\n');
+  let stream;
+  document.getElementById('start').onclick = async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: { width: 1280, height: 720 }, audio: true });
+      v.srcObject = new MediaStream(stream.getVideoTracks());
+      const s = stream.getVideoTracks()[0].getSettings();
+      log(`camera started ${s.width}x${s.height} (${stream.getVideoTracks()[0].label})`);
+    } catch (e) { log('error: ' + e.message); }
+  };
+  document.getElementById('stop').onclick = () => { stream?.getTracks().forEach((t) => t.stop()); v.srcObject = null; };
+  // Mirrors what the popup's "Snap now" button does (handy for automated tests).
+  window.snapVanishTrigger = (action = 'toggle') =>
+    window.postMessage({ __snapvanish: 'snapvanish:bridge', type: 'trigger', action }, '*');
+</script>
+</body>
+</html>
